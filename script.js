@@ -38,13 +38,6 @@ async function updateGitHubSummary(titre, message, status) {
   }
 }
 
-function setGitHubOutput(name, value) {
-  if (process.env.GITHUB_OUTPUT) {
-    const fs = require("fs");
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`);
-  }
-}
-
 async function initBrowser() {
   const options = {
     headless: true,
@@ -257,16 +250,12 @@ async function main(nomActivite, jour, start, end, lieu) {
         if (process.env.GITHUB_ACTIONS === "true") {
           await updateGitHubSummary("Réservation", result.message, "✅ Succès");
         }
-        setGitHubOutput("reservation_status", "success");
-        setGitHubOutput("reservation_message", result.message);
       } else if (result.error) {
         logMessage("❌ Échec de la réservation", "error");
         logMessage(`Erreur: ${result.message}`, "error");
         if (process.env.GITHUB_ACTIONS === "true") {
           await updateGitHubSummary("Réservation", result.message, "❌ Échec");
         }
-        setGitHubOutput("reservation_status", "error");
-        setGitHubOutput("reservation_message", result.message);
       } else {
         logMessage("⚠️ Résultat incertain de la réservation", "warning");
         logMessage(`Message: ${result.message}`, "warning");
