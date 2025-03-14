@@ -267,8 +267,6 @@ async function main(nomActivite, jour, start, end, lieu) {
           );
         }
       }
-      page.close();
-      return;
     } else {
       logMessage("❌ Vous etes peut etre déja inscrit à ce créneau", "warning");
       if (process.env.GITHUB_ACTIONS === "true") {
@@ -278,8 +276,6 @@ async function main(nomActivite, jour, start, end, lieu) {
           "❌ Vous etes peut etre déja inscrit à ce créneau"
         );
       }
-      page.close();
-      return;
     }
   } catch (error) {
     logMessage(`Une erreur est survenue : ${error.message}`, "error");
