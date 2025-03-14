@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       activite:
-        description: 'Nom de l'activité'
+        description: "Nom de l'activité"
         required: true
         default: 'Badminton'
       jour:

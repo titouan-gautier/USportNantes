@@ -38,6 +38,13 @@ async function updateGitHubSummary(titre, message, status) {
   }
 }
 
+function setGitHubOutput(name, value) {
+  if (process.env.GITHUB_OUTPUT) {
+    const fs = require("fs");
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`);
+  }
+}
+
 async function initBrowser() {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -233,28 +240,40 @@ async function main(nomActivite, jour, start, end, lieu) {
       if (result.success) {
         logMessage("✅ Réservation effectuée avec succès !", "success");
         logMessage(`Message: ${result.message}`, "success");
-        if (process.env.GITHUB_ACTIONS === 'true') {
+        if (process.env.GITHUB_ACTIONS === "true") {
           await updateGitHubSummary("Réservation", result.message, "✅ Succès");
         }
+        setGitHubOutput("reservation_status", "success");
+        setGitHubOutput("reservation_message", result.message);
       } else if (result.error) {
         logMessage("❌ Échec de la réservation", "error");
         logMessage(`Erreur: ${result.message}`, "error");
-        if (process.env.GITHUB_ACTIONS === 'true') {
+        if (process.env.GITHUB_ACTIONS === "true") {
           await updateGitHubSummary("Réservation", result.message, "❌ Échec");
         }
+        setGitHubOutput("reservation_status", "error");
+        setGitHubOutput("reservation_message", result.message);
       } else {
         logMessage("⚠️ Résultat incertain de la réservation", "warning");
         logMessage(`Message: ${result.message}`, "warning");
-        if (process.env.GITHUB_ACTIONS === 'true') {
-          await updateGitHubSummary("Réservation", result.message, "⚠️ Incertain");
+        if (process.env.GITHUB_ACTIONS === "true") {
+          await updateGitHubSummary(
+            "Réservation",
+            result.message,
+            "⚠️ Incertain"
+          );
         }
       }
       page.close();
       return;
     } else {
       logMessage("❌ Vous etes peut etre déja inscrit à ce créneau", "warning");
-      if (process.env.GITHUB_ACTIONS === 'true') {
-        await updateGitHubSummary("Réservation", result.message, "❌ Vous etes peut etre déja inscrit à ce créneau");
+      if (process.env.GITHUB_ACTIONS === "true") {
+        await updateGitHubSummary(
+          "Réservation",
+          result.message,
+          "❌ Vous etes peut etre déja inscrit à ce créneau"
+        );
       }
       page.close();
       return;
