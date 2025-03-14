@@ -46,10 +46,20 @@ function setGitHubOutput(name, value) {
 }
 
 async function initBrowser() {
-  const browser = await puppeteer.launch({ headless: true });
+  const options = {
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  };
+
+  // Utiliser le chemin d'exécutable fourni par l'environnement s'il existe
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+    options.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+  }
+
+  const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
   page.on("console", (msg) => console.log("Log du navigateur:", msg.text()));
-  return page;
+  return { browser, page };
 }
 
 async function login(page) {
@@ -225,8 +235,12 @@ async function waitForToastMessage(page, timeout = 10000) {
 
 async function main(nomActivite, jour, start, end, lieu) {
   let browser;
+  let page;
+
   try {
-    const page = await initBrowser();
+    const browserSession = await initBrowser();
+    browser = browserSession.browser;
+    page = browserSession.page;
     await login(page);
     await handleLoginDialog(page);
     await navigateToBooking(page);
@@ -280,6 +294,8 @@ async function main(nomActivite, jour, start, end, lieu) {
     }
   } catch (error) {
     logMessage(`Une erreur est survenue : ${error.message}`, "error");
+  } finally {
+    if (browser) await browser.close();
   }
 }
 

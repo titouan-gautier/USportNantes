@@ -4,8 +4,8 @@ name: Réservation USport Hebdomadaire
 on:
   schedule:
     # Format cron: minute heure jour_du_mois mois jour_de_la_semaine
-    # Cet exemple s'exécute tous les mardis à 8h30
-    - cron: '30 8 * * 2'
+    # Exécuter tous les mercredis à 21h01
+    - cron: '1 21 * * 3'
   
   # Permet de lancer manuellement depuis l'interface GitHub
   workflow_dispatch:
