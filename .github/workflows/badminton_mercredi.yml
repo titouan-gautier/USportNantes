@@ -1,5 +1,5 @@
 # .github/workflows/reservation.yml
-name: Réservation USport Hebdomadaire
+name: Réservation Badminton Mercredi
 
 on:
   schedule:
