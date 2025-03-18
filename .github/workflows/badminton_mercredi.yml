@@ -5,7 +5,7 @@ on:
   schedule:
     # Format cron: minute heure jour_du_mois mois jour_de_la_semaine
     # Exécuter tous les mercredis à 21h01
-    - cron: '31 21 * * 3'
+    - cron: '31 20 * * 3'
   
   # Permet de lancer manuellement depuis l'interface GitHub
   workflow_dispatch:
