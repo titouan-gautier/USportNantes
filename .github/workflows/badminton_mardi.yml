@@ -1,6 +1,7 @@
 # .github/workflows/reservation.yml
 name: Réservation Badminton Mardi
 
+'''
 on:
   schedule:
     # Format cron: minute heure jour_du_mois mois jour_de_la_semaine
@@ -74,3 +75,5 @@ jobs:
         run: |
           echo "Statut de réservation: ${{ steps.booking.outputs.reservation_status || 'non disponible' }}"
           echo "Message: ${{ steps.booking.outputs.reservation_message || 'non disponible' }}"
+
+'''
